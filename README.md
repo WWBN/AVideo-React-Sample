@@ -2,6 +2,8 @@
 
 **AVideo-React-Sample** is an open-source project demonstrating how to build a custom **React-based frontend** for AVideo. This serves as a reference implementation for developers looking to create their own layout while integrating with AVideo’s API.
 
+👉 **Live Sample:** [https://react.tutorials.avideo.com/](https://react.tutorials.avideo.com/)
+
 ## 🌟 Features
 ✔ Fully responsive **React-based layout**  
 ✔ Uses **TailwindCSS** for styling  
