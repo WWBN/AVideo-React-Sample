@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+all_js_files.txt
+.gitignore
+scan-js-files.js

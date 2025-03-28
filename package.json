@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-aspect-ratio": "^1.1.2",
     "@tailwindcss/vite": "^4.0.14",
+    "framer-motion": "^12.6.2",
     "my-video-app": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
