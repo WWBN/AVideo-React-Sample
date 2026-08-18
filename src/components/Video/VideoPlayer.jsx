@@ -6,9 +6,9 @@ import Tooltip from "../UI/Tooltip";
 // Forces embed params documented at https://github.com/WWBN/AVideo/wiki/Video-Embed-URL-for-AVideo:
 // showinfo=0 hides the player's own title/creator/tags bar, modestbranding=1 removes the
 // clickable AVideo/channel logo overlay, disableOwnerImage=1 hides the owner's avatar -
-// all three were navigating the iframe away to the main site - and forceCloseButton=0 /
+// all three were navigating the iframe away to the main site - forceCloseButton=0 /
 // disableCloseButton=1 hide AVideo's own close button(s), including in series/playlist
-// embeds, since we render our own.
+// embeds, since we render our own, and disableContextMenu=1 blocks the player's right-click menu.
 const buildEmbedUrl = (videoUrl) => {
     try {
         const url = new URL(videoUrl);
@@ -17,6 +17,7 @@ const buildEmbedUrl = (videoUrl) => {
         url.searchParams.set("disableOwnerImage", "1");
         url.searchParams.set("forceCloseButton", "0");
         url.searchParams.set("disableCloseButton", "1");
+        url.searchParams.set("disableContextMenu", "1");
         return url.toString();
     } catch {
         return videoUrl;
