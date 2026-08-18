@@ -305,3 +305,32 @@ export const setFavorite = async (videos_id, add) => {
         throw error;
     }
 };
+
+// Function to fetch the logged-in user's playlists (Programs API), optionally only those with videos.
+// Each playlist includes a `videos` array of { videos_id, ... } rows used to check membership.
+export const getPlaylists = async (onlyWithVideos = false) => {
+    const data = await requestAVideoAPI(`get.json.php?APIName=programs&onlyWithVideos=${onlyWithVideos ? 1 : 0}`);
+    return data.response || [];
+};
+
+// Function to fetch a single playlist's videos. Rows share the same enriched shape as the
+// main gallery (Poster, embedlink, duration, etc.) since both use Video::getAllVideos() server-side.
+export const getPlaylistVideos = async (playlists_id) => {
+    const data = await requestAVideoAPI(`get.json.php?APIName=program&playlists_id=${playlists_id}`);
+    return data.response?.videos || [];
+};
+
+// Function to create a new playlist for the logged-in user
+export const createPlaylist = async (name, status = "unlisted") => {
+    return requestAVideoAPI(`set.json.php?APIName=create_programs&name=${encodeURIComponent(name)}&status=${status}`, "POST");
+};
+
+// Function to delete a playlist owned by the logged-in user
+export const deletePlaylist = async (playlists_id) => {
+    return requestAVideoAPI(`set.json.php?APIName=delete_programs&playlists_id=${playlists_id}`, "POST");
+};
+
+// Function to add (add=true) or remove (add=false) a video from a playlist
+export const togglePlaylistVideo = async (videos_id, playlists_id, add) => {
+    return requestAVideoAPI(`set.json.php?APIName=programs&videos_id=${videos_id}&playlists_id=${playlists_id}&add=${add ? 1 : 0}`, "POST");
+};

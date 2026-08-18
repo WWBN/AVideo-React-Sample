@@ -1,13 +1,28 @@
-import { useState, useEffect } from "react";
-import { FaTimes, FaExpand, FaComment } from "react-icons/fa";
+import { useState, useEffect, useMemo } from "react";
+import { FaTimes, FaExpand, FaComment, FaStepForward, FaStepBackward } from "react-icons/fa";
 import Comments from "./Comments";
 import Tooltip from "../UI/Tooltip";
 
-export default function VideoPlayer({ videoUrl, videosId, onClose }) {
+// Forces embed params documented at https://github.com/WWBN/AVideo/wiki/Video-Embed-URL-for-AVideo:
+// showinfo=0 hides the player's own title/creator/tags bar (its links were navigating the iframe
+// away to the main site), forceCloseButton=0 hides AVideo's own close button since we render ours.
+const buildEmbedUrl = (videoUrl) => {
+    try {
+        const url = new URL(videoUrl);
+        url.searchParams.set("showinfo", "0");
+        url.searchParams.set("forceCloseButton", "0");
+        return url.toString();
+    } catch {
+        return videoUrl;
+    }
+};
+
+export default function VideoPlayer({ videoUrl, videosId, onClose, onNext, onPrevious, hasNext = false, hasPrevious = false }) {
     const [isMiniPlayer, setIsMiniPlayer] = useState(false);
     const [showComments, setShowComments] = useState(false);
     const [iframeLoaded, setIframeLoaded] = useState(false);
     const canShowComments = showComments && !isMiniPlayer && videosId;
+    const embedUrl = useMemo(() => buildEmbedUrl(videoUrl), [videoUrl]);
 
     // The embedded AVideo player posts this message (see closeFullScreenOrHistoryBack
     // in the backend's script.js) when its own close button is clicked, since it can't
@@ -63,6 +78,29 @@ export default function VideoPlayer({ videoUrl, videosId, onClose }) {
                 </button>
             </Tooltip>
 
+            {!isMiniPlayer && (onNext || onPrevious) && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-3">
+                    <Tooltip content="Previous video">
+                        <button
+                            onClick={onPrevious}
+                            disabled={!hasPrevious}
+                            aria-label="Previous video"
+                            className="cursor-pointer text-white text-lg bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-80 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed">
+                            <FaStepBackward />
+                        </button>
+                    </Tooltip>
+                    <Tooltip content="Next video">
+                        <button
+                            onClick={onNext}
+                            disabled={!hasNext}
+                            aria-label="Next video"
+                            className="cursor-pointer text-white text-lg bg-black bg-opacity-50 p-3 rounded-full hover:bg-opacity-80 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed">
+                            <FaStepForward />
+                        </button>
+                    </Tooltip>
+                </div>
+            )}
+
             <div className="flex w-full h-full relative">
                 {!iframeLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -71,7 +109,7 @@ export default function VideoPlayer({ videoUrl, videosId, onClose }) {
                 )}
 
                 <iframe 
-                    src={videoUrl} 
+                    src={embedUrl} 
                     onLoad={() => setIframeLoaded(true)}
                     className={`rounded-lg transition-opacity duration-300 ${iframeLoaded ? "opacity-100" : "opacity-0"} ${canShowComments ? "w-2/3 h-full" : "w-full h-full"}`}
                     allowFullScreen 

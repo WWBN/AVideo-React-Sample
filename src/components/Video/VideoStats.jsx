@@ -1,11 +1,12 @@
 import TagList from "../UI/TagList";
 import LikeDislike from "../UI/LikeDislike";
 import FavoriteButton from "../UI/FavoriteButton";
+import PlaylistButton from "../UI/PlaylistButton";
 
 export default function VideoStats({ video }) {
     return (
         <>
-            {/* Like/Dislike/Favorite Section */}
+            {/* Like/Dislike/Favorite/Playlist Section */}
             <div className="flex items-center justify-between">
                 <LikeDislike 
                     videoId={video.id}
@@ -13,7 +14,10 @@ export default function VideoStats({ video }) {
                     initialDislikes={video.dislikes}
                     initialVote={video.myVote}
                 />
-                <FavoriteButton videoId={video.id} initialFavorite={video.isFavorite} />
+                <div className="flex items-center gap-3">
+                    <PlaylistButton videoId={video.id} />
+                    <FavoriteButton videoId={video.id} initialFavorite={video.isFavorite} />
+                </div>
             </div>
 
             {/* Video Category */}

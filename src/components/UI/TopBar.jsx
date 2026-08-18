@@ -1,12 +1,16 @@
 import { useState } from "react";
+import { FaListUl } from "react-icons/fa";
 import LoginPage from "../Auth/LoginPage";
 import SignUpPage from "../Auth/SignUpPage";
+import PlaylistsPage from "../Playlist/PlaylistsPage";
 import Logo from "./Logo";
 import DarkModeToggle from "./DarkModeToggle";
 import AuthButton from "./AuthButton";
+import Tooltip from "./Tooltip";
 
 export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
     const [authMode, setAuthMode] = useState(null); // null | 'login' | 'signup'
+    const [showPlaylists, setShowPlaylists] = useState(false);
 
     return (
         <>
@@ -15,6 +19,18 @@ export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
                 <Logo />
 
                 <div className="flex items-center gap-4">
+                    {isLoggedIn && (
+                        <Tooltip content="My Playlists">
+                            <button
+                                onClick={() => setShowPlaylists(true)}
+                                aria-label="My Playlists"
+                                className="cursor-pointer text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 text-lg"
+                            >
+                                <FaListUl />
+                            </button>
+                        </Tooltip>
+                    )}
+
                     {/* Dark Mode Toggle Component */}
                     <DarkModeToggle />
 
@@ -37,6 +53,8 @@ export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
                     onSwitchToLogin={() => setAuthMode("login")}
                 />
             )}
+
+            {showPlaylists && <PlaylistsPage onClose={() => setShowPlaylists(false)} />}
         </>
     );
 }
