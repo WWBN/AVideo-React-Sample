@@ -4,6 +4,8 @@
 
 👉 **Live Demo:** [https://react.tutorials.avideo.com/](https://react.tutorials.avideo.com/)
 
+<img width="850" height="421" alt="chrome-capture-2026-08-18 (1)" src="https://github.com/user-attachments/assets/b15bc86a-61e3-4eb5-882d-56c02e82c03d" />
+
 ## 🌟 Features
 
 **Browsing & Playback**
