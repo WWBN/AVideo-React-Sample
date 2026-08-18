@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaPlay, FaArrowDown } from 'react-icons/fa';
 import VideoCard from "./VideoCard";
+import Tooltip from "../UI/Tooltip";
 
 export default function VideoSection({ section, onPlay, onLoadMore }) {
     const { title, endpointResponse, loadingMore } = section;
@@ -18,13 +19,14 @@ export default function VideoSection({ section, onPlay, onLoadMore }) {
             </div>
 
             {section.endpointResponse.hasMore && !loadingMore && (
-                <button
-                    onClick={onLoadMore}
-                    title="Load more videos"
-                    className="cursor-pointer mt-4 w-full bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 rounded-md flex items-center justify-center transition-all duration-300"
-                >
-                    <FaArrowDown className="mr-2" /> Load More
-                </button>
+                <Tooltip content="Load more videos">
+                    <button
+                        onClick={onLoadMore}
+                        className="cursor-pointer mt-4 w-full bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 rounded-md flex items-center justify-center transition-all duration-300"
+                    >
+                        <FaArrowDown className="mr-2" /> Load More
+                    </button>
+                </Tooltip>
             )}
 
             {loadingMore && (

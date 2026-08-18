@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FaTimes, FaExpand, FaComment } from "react-icons/fa";
 import Comments from "./Comments";
+import Tooltip from "../UI/Tooltip";
 
 export default function VideoPlayer({ videoUrl, videosId, onClose }) {
     const [isMiniPlayer, setIsMiniPlayer] = useState(false);
@@ -32,32 +33,35 @@ export default function VideoPlayer({ videoUrl, videosId, onClose }) {
             bg-black bg-opacity-90 flex justify-center items-center z-50 transition-all duration-300`}>
             
             {!isMiniPlayer && (
-                <button 
-                    onClick={onClose} 
-                    title="Close player"
-                    aria-label="Close player"
-                    className="cursor-pointer absolute top-4 right-4 z-10 text-white text-3xl font-bold bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
-                    <FaTimes />
-                </button>
+                <Tooltip content="Close player">
+                    <button 
+                        onClick={onClose} 
+                        aria-label="Close player"
+                        className="cursor-pointer absolute top-4 right-4 z-10 text-white text-3xl font-bold bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
+                        <FaTimes />
+                    </button>
+                </Tooltip>
             )}
 
             {!isMiniPlayer && videosId && (
-                <button
-                    onClick={() => setShowComments(!showComments)}
-                    title={showComments ? "Hide comments" : "Show comments"}
-                    aria-label={showComments ? "Hide comments" : "Show comments"}
-                    className="cursor-pointer absolute top-4 left-4 z-10 text-white text-xl bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
-                    <FaComment />
-                </button>
+                <Tooltip content={showComments ? "Hide comments" : "Show comments"}>
+                    <button
+                        onClick={() => setShowComments(!showComments)}
+                        aria-label={showComments ? "Hide comments" : "Show comments"}
+                        className="cursor-pointer absolute top-4 left-4 z-10 text-white text-xl bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
+                        <FaComment />
+                    </button>
+                </Tooltip>
             )}
 
-            <button 
-                onClick={() => setIsMiniPlayer(!isMiniPlayer)} 
-                title={isMiniPlayer ? "Expand player" : "Minimize player"}
-                aria-label={isMiniPlayer ? "Expand player" : "Minimize player"}
-                className="cursor-pointer absolute bottom-4 right-4 z-10 text-white text-xl bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
-                <FaExpand />
-            </button>
+            <Tooltip content={isMiniPlayer ? "Expand player" : "Minimize player"}>
+                <button 
+                    onClick={() => setIsMiniPlayer(!isMiniPlayer)} 
+                    aria-label={isMiniPlayer ? "Expand player" : "Minimize player"}
+                    className="cursor-pointer absolute bottom-4 right-4 z-10 text-white text-xl bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition-all duration-300">
+                    <FaExpand />
+                </button>
+            </Tooltip>
 
             <div className="flex w-full h-full relative">
                 {!iframeLoaded && (

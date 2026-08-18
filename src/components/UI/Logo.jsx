@@ -1,7 +1,10 @@
 import { BASE_URL } from "../../config/config";
+import Tooltip from "./Tooltip";
 
 export default function Logo() {
     return (
-        <img src={`${BASE_URL}logo.png`} alt="Logo" title="Home" className="h-10" />
+        <Tooltip content="Home">
+            <img src={`${BASE_URL}logo.png`} alt="Logo" className="h-10" />
+        </Tooltip>
     );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { handleReaction } from "../../config/api";
 import Spinner from "./Spinner";
+import Tooltip from "./Tooltip";
 
 export default function LikeDislike({ videoId, initialLikes, initialDislikes, initialVote }) {
     const [likes, setLikes] = useState(initialLikes);
@@ -45,29 +46,31 @@ export default function LikeDislike({ videoId, initialLikes, initialDislikes, in
 
     return (
         <div className="flex items-center mt-2 space-x-4 text-gray-600 dark:text-gray-300">
-            <button
-                onClick={() => onReactionClick("like")}
-                disabled={!!pendingReaction}
-                title={userReaction === 1 ? "Remove like" : "Like this video"}
-                aria-label={userReaction === 1 ? "Remove like" : "Like this video"}
-                className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
-                    userReaction === 1 ? "text-green-500" : ""
-                }`}
-            >
-                {pendingReaction === "like" ? <Spinner size={14} /> : <FaThumbsUp />} {likes}
-            </button>
+            <Tooltip content={userReaction === 1 ? "Remove like" : "Like this video"}>
+                <button
+                    onClick={() => onReactionClick("like")}
+                    disabled={!!pendingReaction}
+                    aria-label={userReaction === 1 ? "Remove like" : "Like this video"}
+                    className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
+                        userReaction === 1 ? "text-green-500" : ""
+                    }`}
+                >
+                    {pendingReaction === "like" ? <Spinner size={14} /> : <FaThumbsUp />} {likes}
+                </button>
+            </Tooltip>
 
-            <button
-                onClick={() => onReactionClick("dislike")}
-                disabled={!!pendingReaction}
-                title={userReaction === -1 ? "Remove dislike" : "Dislike this video"}
-                aria-label={userReaction === -1 ? "Remove dislike" : "Dislike this video"}
-                className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
-                    userReaction === -1 ? "text-red-500" : ""
-                }`}
-            >
-                {pendingReaction === "dislike" ? <Spinner size={14} /> : <FaThumbsDown />} {dislikes}
-            </button>
+            <Tooltip content={userReaction === -1 ? "Remove dislike" : "Dislike this video"}>
+                <button
+                    onClick={() => onReactionClick("dislike")}
+                    disabled={!!pendingReaction}
+                    aria-label={userReaction === -1 ? "Remove dislike" : "Dislike this video"}
+                    className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
+                        userReaction === -1 ? "text-red-500" : ""
+                    }`}
+                >
+                    {pendingReaction === "dislike" ? <Spinner size={14} /> : <FaThumbsDown />} {dislikes}
+                </button>
+            </Tooltip>
         </div>
     );
 }

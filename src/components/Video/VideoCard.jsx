@@ -3,6 +3,7 @@ import { FaClock, FaPlay } from "react-icons/fa";
 import UserInfo from "../User/UserInfo.jsx";
 import VideoStats from "./VideoStats";
 import { DEFAULT_IMAGE } from '../../config/config.jsx';
+import Tooltip from "../UI/Tooltip";
 
 export default function VideoCard({ video, onPlay }) {
     const [imageLoaded, setImageLoaded] = useState(false);
@@ -17,7 +18,6 @@ export default function VideoCard({ video, onPlay }) {
                 <img
                     src={video.Poster || DEFAULT_IMAGE}
                     alt={video.title || "Untitled video"}
-                    title={video.title}
                     loading="lazy"
                     onLoad={() => setImageLoaded(true)}
                     className={`w-full h-48 object-cover rounded-t-lg transition-opacity duration-300 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
@@ -29,18 +29,19 @@ export default function VideoCard({ video, onPlay }) {
 
             {/* Video Info */}
             <div className="p-4">
-                <h2 className="text-lg font-bold truncate" title={video.title}>{video.title}</h2>
+                <h2 className="text-lg font-bold truncate">{video.title}</h2>
                 <UserInfo userPhoto={video.UserPhoto} channelName={video.channelName} />
                 <VideoStats video={video} />
 
                 {/* Play Button */}
-                <button 
-                    onClick={() => onPlay(video)}
-                    title={`Play "${video.title}"`}
-                    className="cursor-pointer mt-4 w-full bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 rounded-md flex items-center justify-center transition-all duration-300"
-                >
-                    <FaPlay className="mr-2" /> Play
-                </button>
+                <Tooltip content={`Play "${video.title}"`}>
+                    <button 
+                        onClick={() => onPlay(video)}
+                        className="cursor-pointer mt-4 w-full bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 rounded-md flex items-center justify-center transition-all duration-300"
+                    >
+                        <FaPlay className="mr-2" /> Play
+                    </button>
+                </Tooltip>
             </div>
         </div>
     );

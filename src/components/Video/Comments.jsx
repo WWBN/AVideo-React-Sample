@@ -3,6 +3,7 @@ import { FaPaperPlane } from "react-icons/fa";
 import { getComments, postComment, getStoredCredentials } from "../../config/api";
 import { DEFAULT_USER_PHOTO } from "../../config/config";
 import Spinner from "../UI/Spinner";
+import Tooltip from "../UI/Tooltip";
 
 export default function Comments({ videosId }) {
     const [comments, setComments] = useState([]);
@@ -90,15 +91,16 @@ export default function Comments({ videosId }) {
                         disabled={sending}
                         className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-md px-3 py-2 outline-none text-sm disabled:opacity-60"
                     />
-                    <button
-                        type="submit"
-                        disabled={sending}
-                        title="Send comment"
-                        aria-label="Send comment"
-                        className="cursor-pointer bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white p-2 rounded-md transition-all duration-300 disabled:opacity-70"
-                    >
-                        {sending ? <Spinner size={14} /> : <FaPaperPlane />}
-                    </button>
+                    <Tooltip content="Send comment">
+                        <button
+                            type="submit"
+                            disabled={sending}
+                            aria-label="Send comment"
+                            className="cursor-pointer bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white p-2 rounded-md transition-all duration-300 disabled:opacity-70"
+                        >
+                            {sending ? <Spinner size={14} /> : <FaPaperPlane />}
+                        </button>
+                    </Tooltip>
                 </form>
             ) : (
                 <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Log in to leave a comment.</p>
