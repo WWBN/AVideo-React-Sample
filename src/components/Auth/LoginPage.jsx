@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaUser, FaLock, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { login } from "../../config/api";
 import Spinner from "../UI/Spinner";
 import Tooltip from "../UI/Tooltip";
@@ -25,6 +26,7 @@ export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
             const response = await login(username, password);
 
             if (response.success) {
+                toast.success(`Welcome back, ${response.data.username}!`);
                 onLogin();
                 onClose();
             } else {

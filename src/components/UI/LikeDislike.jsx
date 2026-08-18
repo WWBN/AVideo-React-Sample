@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { handleReaction } from "../../config/api";
 import Spinner from "./Spinner";
 import Tooltip from "./Tooltip";
@@ -31,9 +32,10 @@ export default function LikeDislike({ videoId, initialLikes, initialDislikes, in
                 setDislikes(response.response.dislikes);
                 setUserReaction(response.response.myVote);
             } else {
-                console.error("Error sending reaction:", response.message);
+                toast.error(response.message || "Error sending reaction.");
             }
         } catch (error) {
+            toast.error("Error connecting to API.");
             console.error("Error connecting to API:", error);
         } finally {
             setPendingReaction(null);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import toast from "react-hot-toast";
 import { setFavorite } from "../../config/api";
 import Spinner from "./Spinner";
 import Tooltip from "./Tooltip";
@@ -17,10 +18,12 @@ export default function FavoriteButton({ videoId, initialFavorite = false }) {
 
             if (!response.error) {
                 setIsFavorite(!isFavorite);
+                toast.success(!isFavorite ? "Added to favorites" : "Removed from favorites");
             } else {
-                console.error("Error updating favorite:", response.message);
+                toast.error(response.message || "Error updating favorite.");
             }
         } catch (error) {
+            toast.error("Error connecting to API.");
             console.error("Error connecting to API:", error);
         } finally {
             setIsLoading(false);

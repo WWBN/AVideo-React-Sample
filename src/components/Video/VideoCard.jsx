@@ -9,7 +9,7 @@ export default function VideoCard({ video, onPlay }) {
     const [imageLoaded, setImageLoaded] = useState(false);
 
     return (
-        <div className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md dark:shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+        <div className="group bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-md dark:shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:ring-2 hover:ring-blue-500/60">
             {/* Video Thumbnail */}
             <div className="relative h-48 bg-gray-200 dark:bg-gray-700 overflow-hidden">
                 {!imageLoaded && (
@@ -20,12 +20,23 @@ export default function VideoCard({ video, onPlay }) {
                     alt={video.title || "Untitled video"}
                     loading="lazy"
                     onLoad={() => setImageLoaded(true)}
-                    className={`w-full h-48 object-cover rounded-t-lg transition-opacity duration-300 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                    className={`w-full h-48 object-cover rounded-t-lg transition-all duration-500 group-hover:scale-110 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                 />
+                {/* Netflix-style hover overlay with a quick-play button */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors duration-300">
+                    <button
+                        onClick={() => onPlay(video)}
+                        aria-label={`Play "${video.title}"`}
+                        className="cursor-pointer flex items-center justify-center w-14 h-14 rounded-full bg-white/90 text-blue-600 text-xl opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 hover:bg-white"
+                    >
+                        <FaPlay className="ml-1" />
+                    </button>
+                </div>
                 <span className="absolute bottom-2 right-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-md">
                     <FaClock className="inline-block mr-1" /> {video.duration || "??:??"}
                 </span>
             </div>
+
 
             {/* Video Info */}
             <div className="p-4">

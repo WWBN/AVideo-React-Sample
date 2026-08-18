@@ -211,8 +211,7 @@ export const loadMoreVideos = async (index, section, setSections) => {
 export const handleReaction = async (videos_id, reactionType) => {
     const credentials = getStoredCredentials();
     if (!credentials) {
-        alert("You need to be logged in to react to the video.");
-        return;
+        return { error: true, message: "You need to be logged in to react to the video." };
     }
 
     let apiName = "";

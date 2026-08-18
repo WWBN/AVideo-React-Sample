@@ -1,29 +1,35 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import VideoSection from "./VideoSection";
+import VideoCardSkeleton from "./VideoCardSkeleton";
+import HeroBanner from "./HeroBanner";
 import VideoPlayer from "./VideoPlayer";
 import { fetchVideos, fetchVideosByCategory, loadMoreVideos } from "../../config/api.jsx";
 import { FIRSTPAGE_API_URL } from '../../config/config.jsx';
 
-export default function VideoGallery({ setLoading, selectedCategory }) {
+const SKELETON_GRID_CLASSES = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 2xl:grid-cols-6 gap-6";
+
+export default function VideoGallery({ selectedCategory }) {
   const [sections, setSections] = useState([]);
   const [error, setError] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     if (selectedCategory) {
-      fetchVideosByCategory(selectedCategory, setSections, setError, setLoading)
+      fetchVideosByCategory(selectedCategory, setSections, setError, setIsLoading)
         .finally(() => {
-          setLoading(false);
+          setIsLoading(false);
         });
     } else {
-      fetchVideos(FIRSTPAGE_API_URL, setSections, setError, setLoading)
+      fetchVideos(FIRSTPAGE_API_URL, setSections, setError, setIsLoading)
         .finally(() => {
-          setLoading(false);
+          setIsLoading(false);
         });
     }
-  }, [selectedCategory, setLoading]);
+  }, [selectedCategory]);
+
+  const featuredVideo = !selectedCategory ? sections[0]?.endpointResponse?.rows?.[0] : null;
 
   return (
     <motion.div
@@ -42,22 +48,33 @@ export default function VideoGallery({ setLoading, selectedCategory }) {
         </motion.p>
       )}
 
-      {sections.length > 0 ? (
-        sections.map((section, index) => (
-          <motion.div
-            key={index}
-            className="mb-8 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-md dark:shadow-lg"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2, duration: 0.5 }}
-          >
-            <VideoSection
-              section={section}
-              onPlay={setActiveVideo}
-              onLoadMore={() => loadMoreVideos(index, section, setSections)}
-            />
-          </motion.div>
-        ))
+      {isLoading ? (
+        <div className={SKELETON_GRID_CLASSES}>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <VideoCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : sections.length > 0 ? (
+        <>
+          {featuredVideo && <HeroBanner video={featuredVideo} onPlay={setActiveVideo} />}
+
+          {sections.map((section, index) => (
+            <motion.div
+              key={index}
+              className="mb-8 p-4 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-md dark:shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.5 }}
+            >
+              <VideoSection
+                section={section}
+                onPlay={setActiveVideo}
+                onLoadMore={() => loadMoreVideos(index, section, setSections)}
+              />
+            </motion.div>
+          ))}
+        </>
       ) : (
         <motion.p
           className="text-center text-gray-500 dark:text-gray-400"
@@ -84,3 +101,4 @@ export default function VideoGallery({ setLoading, selectedCategory }) {
     </motion.div>
   );
 }
+

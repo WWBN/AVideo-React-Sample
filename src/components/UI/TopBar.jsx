@@ -10,7 +10,7 @@ export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
 
     return (
         <>
-            <nav className="p-4 shadow-md flex justify-between items-center transition-colors duration-300 bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
+            <nav className="sticky top-0 z-40 p-4 shadow-md flex justify-between items-center transition-colors duration-300 bg-white/80 text-gray-900 dark:bg-gray-900/70 dark:text-white backdrop-blur-md border-b border-gray-200/60 dark:border-gray-700/60">
                 {/* Logo Component */}
                 <Logo />
 
