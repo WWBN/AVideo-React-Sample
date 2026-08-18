@@ -71,7 +71,11 @@ export default function VideoGallery({ setLoading }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <VideoPlayer videoUrl={activeVideo} onClose={() => setActiveVideo(null)} />
+          <VideoPlayer
+            videoUrl={activeVideo.embedlink}
+            videosId={activeVideo.id}
+            onClose={() => setActiveVideo(null)}
+          />
         </motion.div>
       )}
     </motion.div>

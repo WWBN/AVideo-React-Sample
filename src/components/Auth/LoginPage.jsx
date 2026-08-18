@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { FaUser, FaLock, FaTimes } from "react-icons/fa";
+import { FaUser, FaLock, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { login } from "../../config/api";
+import Spinner from "../UI/Spinner";
 
-export default function LoginPage({ onLogin, onClose }) {
+export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,6 +18,8 @@ export default function LoginPage({ onLogin, onClose }) {
             return;
         }
 
+        setSubmitting(true);
+        setError("");
         try {
             const response = await login(username, password);
 
@@ -26,6 +31,8 @@ export default function LoginPage({ onLogin, onClose }) {
             }
         } catch (error) {
             setError("Error trying to log in. Please try again. " + error.message);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -34,6 +41,8 @@ export default function LoginPage({ onLogin, onClose }) {
             <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md relative">
                 <button
                     onClick={onClose}
+                    title="Close"
+                    aria-label="Close login form"
                     className="cursor-pointer absolute top-2 right-2 text-gray-700 dark:text-gray-300 hover:text-gray-900"
                 >
                     <FaTimes size={20} />
@@ -51,27 +60,56 @@ export default function LoginPage({ onLogin, onClose }) {
                             placeholder="Username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="bg-transparent outline-none w-full text-gray-900 dark:text-white"
+                            autoFocus
+                            disabled={submitting}
+                            className="bg-transparent outline-none w-full text-gray-900 dark:text-white disabled:opacity-60"
                         />
                     </div>
 
                     <div className="flex items-center border rounded-md p-2 bg-gray-200 dark:bg-gray-700">
                         <FaLock className="text-gray-500 dark:text-gray-300 mr-2" />
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="bg-transparent outline-none w-full text-gray-900 dark:text-white"
+                            disabled={submitting}
+                            className="bg-transparent outline-none w-full text-gray-900 dark:text-white disabled:opacity-60"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            title={showPassword ? "Hide password" : "Show password"}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            className="cursor-pointer text-gray-500 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white ml-2"
+                        >
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                        </button>
                     </div>
 
                     <button
                         type="submit"
-                        className="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-transform transform hover:scale-105"
+                        disabled={submitting}
+                        title="Log in to your account"
+                        className="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-transform transform hover:scale-105 disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
                     >
-                        Login
+                        {submitting && <Spinner size={16} />}
+                        {submitting ? "Logging in..." : "Login"}
                     </button>
+
+                    {onSwitchToSignUp && (
+                        <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+                            New here?{" "}
+                            <button
+                                type="button"
+                                onClick={onSwitchToSignUp}
+                                title="Create a new account"
+                                className="cursor-pointer text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                Create an account
+                            </button>
+                        </p>
+                    )}
                 </form>
             </div>
         </div>

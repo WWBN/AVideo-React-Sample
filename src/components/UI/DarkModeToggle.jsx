@@ -21,6 +21,8 @@ export default function DarkModeToggle() {
     return (
         <button
             onClick={() => setDarkMode(prevMode => !prevMode)}
+            title={darkMode ? "Switch to light mode" : "Switch to dark mode"}
+            aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
             className="cursor-pointer p-2 rounded-full transition-all duration-300 hover:scale-110 bg-gray-200 dark:bg-gray-700"
         >
             {darkMode ? <FaSun className="text-yellow-400" /> : <FaMoon />}

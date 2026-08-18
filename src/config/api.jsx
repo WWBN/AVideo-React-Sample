@@ -96,6 +96,29 @@ export const logout = () => {
     window.location.reload();
 };
 
+// Function to request a new CAPTCHA challenge (JPEG image as base64 + its PHP session id)
+export const getCaptcha = async () => {
+    const response = await fetch(`${BASE_URL}objects/getCaptcha.json.php`);
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    return response.json();
+};
+
+// Function to register a new user; requires the sessionId/captcha pair obtained from getCaptcha().
+// Uses form-urlencoded + PHPSESSID query param since the API reads $_POST/$_REQUEST for signUp.
+export const signUp = async ({ user, pass, email, name, captcha, sessionId }) => {
+    const url = `${BASE_URL}plugin/API/set.json.php?APIName=signUp&PHPSESSID=${encodeURIComponent(sessionId)}`;
+    const body = new URLSearchParams({ user, pass, email, name, captcha });
+
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body
+    });
+
+    if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+    return response.json();
+};
+
 // Function to get stored user data
 export const getUserData = () => {
     const userData = localStorage.getItem('user');
@@ -214,5 +237,35 @@ export const handleReaction = async (videos_id, reactionType) => {
         return response;
     } catch (error) {
         console.error("Error connecting to API:", error);
+    }
+};
+
+// Function to fetch comments for a video
+export const getComments = async (videos_id) => {
+    return requestAVideoAPI(`get.json.php?APIName=comment&videos_id=${videos_id}`);
+};
+
+// Function to post a new comment on a video (requires the user to be logged in)
+export const postComment = async (videos_id, comment) => {
+    try {
+        return await requestAVideoAPI(
+            `set.json.php?APIName=comment&videos_id=${videos_id}&comment=${encodeURIComponent(comment)}`,
+            "POST"
+        );
+    } catch (error) {
+        console.error("Error posting comment:", error);
+        throw error;
+    }
+};
+
+// Function to add or remove a video from the user's favorites (requires the PlayLists plugin and login)
+export const setFavorite = async (videos_id, add) => {
+    const apiName = add ? "favorite" : "removeFavorite";
+
+    try {
+        return await requestAVideoAPI(`set.json.php?APIName=${apiName}&videos_id=${videos_id}`, "POST");
+    } catch (error) {
+        console.error("Error updating favorite:", error);
+        throw error;
     }
 };

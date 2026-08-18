@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { handleReaction } from "../../config/api";
+import Spinner from "./Spinner";
 
 export default function LikeDislike({ videoId, initialLikes, initialDislikes, initialVote }) {
     const [likes, setLikes] = useState(initialLikes);
     const [dislikes, setDislikes] = useState(initialDislikes);
     const [userReaction, setUserReaction] = useState(initialVote); // -1 = dislike, 1 = like, 0 = no vote
-    const [isLoading, setIsLoading] = useState(false);
+    const [pendingReaction, setPendingReaction] = useState(null); // "like" | "dislike" | null
 
     const processReaction = async (reactionType) => {
-        if (isLoading) return;
-        setIsLoading(true);
+        if (pendingReaction) return;
+        setPendingReaction(reactionType);
 
         const apiName = 
             reactionType === "like"
@@ -34,7 +35,7 @@ export default function LikeDislike({ videoId, initialLikes, initialDislikes, in
         } catch (error) {
             console.error("Error connecting to API:", error);
         } finally {
-            setIsLoading(false);
+            setPendingReaction(null);
         }
     };
 
@@ -46,22 +47,26 @@ export default function LikeDislike({ videoId, initialLikes, initialDislikes, in
         <div className="flex items-center mt-2 space-x-4 text-gray-600 dark:text-gray-300">
             <button
                 onClick={() => onReactionClick("like")}
-                disabled={isLoading}
-                className={`cursor-pointer flex items-center transition-transform transform hover:scale-115 ${
+                disabled={!!pendingReaction}
+                title={userReaction === 1 ? "Remove like" : "Like this video"}
+                aria-label={userReaction === 1 ? "Remove like" : "Like this video"}
+                className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
                     userReaction === 1 ? "text-green-500" : ""
                 }`}
             >
-                <FaThumbsUp className="mr-1" /> {likes}
+                {pendingReaction === "like" ? <Spinner size={14} /> : <FaThumbsUp />} {likes}
             </button>
 
             <button
                 onClick={() => onReactionClick("dislike")}
-                disabled={isLoading}
-                className={`cursor-pointer flex items-center transition-transform transform hover:scale-115 ${
+                disabled={!!pendingReaction}
+                title={userReaction === -1 ? "Remove dislike" : "Dislike this video"}
+                aria-label={userReaction === -1 ? "Remove dislike" : "Dislike this video"}
+                className={`cursor-pointer flex items-center gap-1 transition-transform transform hover:scale-115 disabled:cursor-not-allowed ${
                     userReaction === -1 ? "text-red-500" : ""
                 }`}
             >
-                <FaThumbsDown className="mr-1" /> {dislikes}
+                {pendingReaction === "dislike" ? <Spinner size={14} /> : <FaThumbsDown />} {dislikes}
             </button>
         </div>
     );

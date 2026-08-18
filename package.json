@@ -12,6 +12,7 @@
   "dependencies": {
     "@radix-ui/react-aspect-ratio": "^1.1.2",
     "@tailwindcss/vite": "^4.0.14",
+    "dompurify": "^3.4.13",
     "framer-motion": "^12.6.2",
     "my-video-app": "file:",
     "react": "^19.0.0",

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import LoginPage from "../Auth/LoginPage";
+import SignUpPage from "../Auth/SignUpPage";
 import Logo from "./Logo";
 import DarkModeToggle from "./DarkModeToggle";
 import AuthButton from "./AuthButton";
 
 export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
-    const [showLogin, setShowLogin] = useState(false); // Control login modal visibility
+    const [authMode, setAuthMode] = useState(null); // null | 'login' | 'signup'
 
     return (
         <>
@@ -18,12 +19,24 @@ export default function TopBar({ isLoggedIn, onLogin, onLogout }) {
                     <DarkModeToggle />
 
                     {/* Login/Logout Button Component */}
-                    <AuthButton isLoggedIn={isLoggedIn} onLogin={() => setShowLogin(true)} onLogout={onLogout} />
+                    <AuthButton isLoggedIn={isLoggedIn} onLogin={() => setAuthMode("login")} onLogout={onLogout} />
                 </div>
             </nav>
 
-            {/* Show Login Page as a Modal */}
-            {showLogin && <LoginPage onClose={() => setShowLogin(false)} onLogin={onLogin} />}
+            {authMode === "login" && (
+                <LoginPage
+                    onClose={() => setAuthMode(null)}
+                    onLogin={onLogin}
+                    onSwitchToSignUp={() => setAuthMode("signup")}
+                />
+            )}
+
+            {authMode === "signup" && (
+                <SignUpPage
+                    onClose={() => setAuthMode(null)}
+                    onSwitchToLogin={() => setAuthMode("login")}
+                />
+            )}
         </>
     );
 }

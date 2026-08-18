@@ -20,6 +20,7 @@ export default function VideoSection({ section, onPlay, onLoadMore }) {
             {section.endpointResponse.hasMore && !loadingMore && (
                 <button
                     onClick={onLoadMore}
+                    title="Load more videos"
                     className="cursor-pointer mt-4 w-full bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white font-bold py-2 rounded-md flex items-center justify-center transition-all duration-300"
                 >
                     <FaArrowDown className="mr-2" /> Load More
@@ -27,7 +28,8 @@ export default function VideoSection({ section, onPlay, onLoadMore }) {
             )}
 
             {loadingMore && (
-                <div className="mt-4 text-center text-gray-500 dark:text-gray-300 animate-pulse">
+                <div className="mt-4 flex items-center justify-center gap-2 text-gray-500 dark:text-gray-300">
+                    <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                     Loading more videos...
                 </div>
             )}
