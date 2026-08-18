@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import VideoGallery from "./components/Video/VideoGallery";
 import TopBar from "./components/UI/TopBar";
 import FullPageLoader from "./components/UI/FullPageLoader";
+import CategoryList from "./components/UI/CategoryList";
 import { TooltipProvider } from "./components/UI/Tooltip";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
         return localStorage.getItem("isLoggedIn") === "true";
     });
     const [loading, setLoading] = useState(false); 
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     const handleLogin = () => {
         setIsLoggedIn(true);
@@ -32,8 +34,9 @@ function App() {
             <TooltipProvider>
                 <FullPageLoader loading={loading} /> 
                 <TopBar isLoggedIn={isLoggedIn} onLogin={handleLogin} onLogout={handleLogout} />
+                <CategoryList selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
                 <div className="container-fluid mx-auto p-4">
-                    <VideoGallery setLoading={setLoading} /> 
+                    <VideoGallery key={selectedCategory ?? "all"} setLoading={setLoading} selectedCategory={selectedCategory} /> 
                 </div>
             </TooltipProvider>
         </div>

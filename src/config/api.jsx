@@ -258,6 +258,43 @@ export const postComment = async (videos_id, comment) => {
     }
 };
 
+// Function to fetch all site categories (id, iconClass, name, clean_name, total/fullTotal video counts)
+export const getCategories = async () => {
+    const data = await requestAVideoAPI('get.json.php?APIName=categories');
+    return data.response || [];
+};
+
+// Fetch the first page of videos belonging to a single category (identified by its clean_name)
+// and adapt the response into the same "section" shape fetchVideos()/loadMoreVideos() expect,
+// so VideoGallery/VideoSection can render it without any special-casing.
+export const fetchVideosByCategory = async (catName, setSections, setError, setLoading) => {
+    setLoading(true);
+    try {
+        const endpoint = `${BASE_URL}plugin/API/get.json.php?APIName=video&catName=${encodeURIComponent(catName)}&rowCount=12&current=1&noRelated=1`;
+        const data = await requestAPI(endpoint);
+
+        if (data.error || !data.response?.rows?.length) {
+            throw new Error("No videos found in this category.");
+        }
+
+        setSections([{
+            title: data.response.category?.name || catName,
+            nextEndpoint: endpoint,
+            currentPage: 2,
+            endpointResponse: {
+                rows: data.response.rows,
+                hasMore: data.response.hasMore ?? false
+            }
+        }]);
+        setError(null);
+    } catch (error) {
+        setSections([]);
+        setError(`Error loading videos: ${error.message}`);
+    } finally {
+        setLoading(false);
+    }
+};
+
 // Function to add or remove a video from the user's favorites (requires the PlayLists plugin and login)
 export const setFavorite = async (videos_id, add) => {
     const apiName = add ? "favorite" : "removeFavorite";

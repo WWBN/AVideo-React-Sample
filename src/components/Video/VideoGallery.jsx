@@ -1,26 +1,29 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import VideoSection from "./VideoSection";
 import VideoPlayer from "./VideoPlayer";
-import { fetchVideos, loadMoreVideos } from "../../config/api.jsx";
+import { fetchVideos, fetchVideosByCategory, loadMoreVideos } from "../../config/api.jsx";
 import { FIRSTPAGE_API_URL } from '../../config/config.jsx';
 
-export default function VideoGallery({ setLoading }) {
+export default function VideoGallery({ setLoading, selectedCategory }) {
   const [sections, setSections] = useState([]);
   const [error, setError] = useState(null);
   const [activeVideo, setActiveVideo] = useState(null);
-  const isFirstLoad = useRef(true);
 
   useEffect(() => {
-    if (isFirstLoad.current) {
-      setLoading(true);
+    setLoading(true);
+    if (selectedCategory) {
+      fetchVideosByCategory(selectedCategory, setSections, setError, setLoading)
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
       fetchVideos(FIRSTPAGE_API_URL, setSections, setError, setLoading)
         .finally(() => {
           setLoading(false);
         });
-      isFirstLoad.current = false;
     }
-  }, [setLoading]);
+  }, [selectedCategory, setLoading]);
 
   return (
     <motion.div
