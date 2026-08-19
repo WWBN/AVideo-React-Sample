@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { FaTimes, FaPlay, FaTrash, FaArrowLeft, FaPlus } from "react-icons/fa";
+import { FaTimes, FaPlay, FaTrash, FaArrowLeft, FaPlus, FaListUl } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { getPlaylists, getPlaylistVideos, createPlaylist, deletePlaylist } from "../../config/api";
 import VideoCard from "../Video/VideoCard";
 import VideoPlayer from "../Video/VideoPlayer";
 import Spinner from "../UI/Spinner";
 import Tooltip from "../UI/Tooltip";
+import EmptyState from "../UI/EmptyState";
 
 // Modal for browsing the logged-in user's playlists and playing them back-to-back.
 // Owns its own playback queue so "Play All"/"Next"/"Previous" work independently of the main gallery.
@@ -106,25 +107,27 @@ export default function PlaylistsPage({ onClose }) {
                                     value={newName}
                                     onChange={(e) => setNewName(e.target.value)}
                                     placeholder="New playlist name"
-                                    className="min-w-0 flex-1 px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+                                    className="min-w-0 flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500/40 outline-none"
                                 />
                                 <button
                                     type="submit"
                                     disabled={creating || !newName.trim()}
-                                    className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {creating ? <Spinner size={14} /> : <FaPlus />} Create
                                 </button>
                             </form>
 
                             {playlists === null && (
-                                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                                    <Spinner size={14} /> Loading playlists...
+                                <div className="space-y-2 animate-pulse">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="h-14 rounded-lg bg-gray-100 dark:bg-gray-800" />
+                                    ))}
                                 </div>
                             )}
 
                             {playlists?.length === 0 && (
-                                <p className="text-center text-gray-500 dark:text-gray-400 py-8">You have no playlists yet.</p>
+                                <EmptyState icon={<FaListUl />} title="No playlists yet" message="Create one above to start saving videos." />
                             )}
 
                             {playlists?.length > 0 && (
@@ -157,20 +160,22 @@ export default function PlaylistsPage({ onClose }) {
                     {selectedPlaylist && (
                         <>
                             {videosLoading && (
-                                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                                    <Spinner size={14} /> Loading videos...
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="h-48 rounded-xl bg-gray-100 dark:bg-gray-800 animate-pulse" />
+                                    ))}
                                 </div>
                             )}
 
                             {!videosLoading && playlistVideos.length === 0 && (
-                                <p className="text-center text-gray-500 dark:text-gray-400 py-8">This playlist has no videos yet.</p>
+                                <EmptyState icon={<FaPlay />} title="This playlist is empty" message="Add videos to it from any video card." />
                             )}
 
                             {!videosLoading && playlistVideos.length > 0 && (
                                 <>
                                     <button
                                         onClick={() => playFrom(0)}
-                                        className="cursor-pointer mb-4 flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                                        className="cursor-pointer mb-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-bold"
                                     >
                                         <FaPlay /> Play All
                                     </button>

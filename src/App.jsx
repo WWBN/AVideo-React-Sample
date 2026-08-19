@@ -10,6 +10,8 @@ function App() {
         return localStorage.getItem("isLoggedIn") === "true";
     });
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResetToken, setSearchResetToken] = useState(0);
 
     const handleLogin = () => {
         setIsLoggedIn(true);
@@ -20,6 +22,22 @@ function App() {
         setIsLoggedIn(false);
         localStorage.removeItem("isLoggedIn");
         toast.success("Logged out successfully");
+    };
+
+    const handleSelectCategory = (category) => {
+        setSelectedCategory(category);
+        setSearchQuery("");
+    };
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        setSelectedCategory(null);
+    };
+
+    const handleGoHome = () => {
+        setSearchQuery("");
+        setSelectedCategory(null);
+        setSearchResetToken((token) => token + 1);
     };
 
     useEffect(() => {
@@ -47,10 +65,25 @@ function App() {
                         error: { iconTheme: { primary: "#ef4444", secondary: "#1f2937" } },
                     }}
                 />
-                <TopBar isLoggedIn={isLoggedIn} onLogin={handleLogin} onLogout={handleLogout} />
-                <CategoryList selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+                <TopBar
+                    isLoggedIn={isLoggedIn}
+                    onLogin={handleLogin}
+                    onLogout={handleLogout}
+                    onSearch={handleSearch}
+                    onClearSearch={() => setSearchQuery("")}
+                    onGoHome={handleGoHome}
+                    searchResetKey={`${selectedCategory ?? "all"}:${searchResetToken}`}
+                />
+                {!searchQuery && (
+                    <CategoryList selectedCategory={selectedCategory} onSelectCategory={handleSelectCategory} />
+                )}
                 <div className="container-fluid mx-auto p-4">
-                    <VideoGallery key={selectedCategory ?? "all"} selectedCategory={selectedCategory} /> 
+                    <VideoGallery
+                        key={searchQuery ? `search:${searchQuery}` : (selectedCategory ?? "all")}
+                        selectedCategory={selectedCategory}
+                        searchQuery={searchQuery}
+                        isLoggedIn={isLoggedIn}
+                    />
                 </div>
             </TooltipProvider>
         </div>

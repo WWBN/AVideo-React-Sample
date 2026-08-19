@@ -41,7 +41,7 @@ export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
 
     return (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-            <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md relative">
+            <div className="w-full max-w-md p-6 bg-white dark:bg-gray-800 rounded-xl shadow-xl relative">
                 <Tooltip content="Close">
                     <button
                         onClick={onClose}
@@ -57,7 +57,7 @@ export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="flex items-center border rounded-md p-2 bg-gray-200 dark:bg-gray-700">
+                    <div className="flex items-center border rounded-lg p-2 bg-gray-200 dark:bg-gray-700">
                         <FaUser className="text-gray-500 dark:text-gray-300 mr-2" />
                         <input
                             type="text"
@@ -70,7 +70,7 @@ export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
                         />
                     </div>
 
-                    <div className="flex items-center border rounded-md p-2 bg-gray-200 dark:bg-gray-700">
+                    <div className="flex items-center border rounded-lg p-2 bg-gray-200 dark:bg-gray-700">
                         <FaLock className="text-gray-500 dark:text-gray-300 mr-2" />
                         <input
                             type={showPassword ? "text" : "password"}
@@ -96,7 +96,7 @@ export default function LoginPage({ onLogin, onClose, onSwitchToSignUp }) {
                         <button
                             type="submit"
                             disabled={submitting}
-                            className="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-md transition-transform transform hover:scale-105 disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
+                            className="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition-transform transform hover:scale-105 disabled:opacity-70 disabled:hover:scale-100 flex items-center justify-center gap-2"
                         >
                             {submitting && <Spinner size={16} />}
                             {submitting ? "Logging in..." : "Login"}

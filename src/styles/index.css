@@ -11,3 +11,15 @@
 .tooltip-content[data-state="instant-open"] {
     animation: tooltip-pop 120ms ease-out;
 }
+
+/* Respect the OS-level reduced motion preference for plain CSS transitions and animations
+   (Tailwind's animate- and transition- utilities). Framer Motion components handle this
+   separately via the useReducedMotion hook where entrance motion is meaningful. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

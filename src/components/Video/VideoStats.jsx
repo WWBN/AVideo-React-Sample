@@ -21,9 +21,11 @@ export default function VideoStats({ video }) {
             </div>
 
             {/* Video Category */}
-            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2 py-1 inline-block rounded-md">
-                {video.category}
-            </p>
+            {video.category && (
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-2.5 py-1 inline-block rounded-full">
+                    {video.category}
+                </p>
+            )}
 
             {/* Tags */}
             <TagList tags={video.tags} />

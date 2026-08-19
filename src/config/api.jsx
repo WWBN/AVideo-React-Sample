@@ -294,6 +294,36 @@ export const fetchVideosByCategory = async (catName, setSections, setError, setL
     }
 };
 
+// Search videos by keyword (searchPhrase, supported directly by get_api_video) and adapt the
+// response into the same "section" shape fetchVideos()/loadMoreVideos() expect.
+export const searchVideos = async (query, setSections, setError, setLoading) => {
+    setLoading(true);
+    try {
+        const endpoint = `${BASE_URL}plugin/API/get.json.php?APIName=video&searchPhrase=${encodeURIComponent(query)}&rowCount=12&current=1&noRelated=1`;
+        const data = await requestAPI(endpoint);
+
+        if (data.error || !data.response?.rows?.length) {
+            throw new Error("No videos found.");
+        }
+
+        setSections([{
+            title: `Results for "${query}"`,
+            nextEndpoint: endpoint,
+            currentPage: 2,
+            endpointResponse: {
+                rows: data.response.rows,
+                hasMore: data.response.hasMore ?? false
+            }
+        }]);
+        setError(null);
+    } catch {
+        setSections([]);
+        setError(null);
+    } finally {
+        setLoading(false);
+    }
+};
+
 // Function to add or remove a video from the user's favorites (requires the PlayLists plugin and login)
 export const setFavorite = async (videos_id, add) => {
     const apiName = add ? "favorite" : "removeFavorite";

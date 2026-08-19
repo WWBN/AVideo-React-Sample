@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane, FaComments } from "react-icons/fa";
 import { getComments, postComment, getStoredCredentials } from "../../config/api";
 import { DEFAULT_USER_PHOTO } from "../../config/config";
 import Spinner from "../UI/Spinner";
 import Tooltip from "../UI/Tooltip";
+import EmptyState from "../UI/EmptyState";
 
 export default function Comments({ videosId }) {
     const [comments, setComments] = useState([]);
@@ -58,9 +59,19 @@ export default function Comments({ videosId }) {
 
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
                 {loading ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Loading comments...</p>
+                    <div className="space-y-3 animate-pulse">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="flex items-start gap-2">
+                                <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
+                                <div className="flex-1 space-y-2">
+                                    <div className="h-3 w-1/3 rounded bg-gray-200 dark:bg-gray-700" />
+                                    <div className="h-3 w-4/5 rounded bg-gray-200 dark:bg-gray-700" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 ) : comments.length === 0 ? (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">No comments yet. Be the first to comment!</p>
+                    <EmptyState icon={<FaComments />} title="No comments yet" message="Be the first to comment!" />
                 ) : (
                     comments.map((comment) => (
                         <div key={comment.id} className="flex items-start gap-2">
@@ -89,14 +100,14 @@ export default function Comments({ videosId }) {
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Add a comment..."
                         disabled={sending}
-                        className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-md px-3 py-2 outline-none text-sm disabled:opacity-60"
+                        className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-lg px-3 py-2 outline-none text-sm disabled:opacity-60 focus:ring-2 focus:ring-blue-500/40"
                     />
                     <Tooltip content="Send comment">
                         <button
                             type="submit"
                             disabled={sending}
                             aria-label="Send comment"
-                            className="cursor-pointer bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white p-2 rounded-md transition-all duration-300 disabled:opacity-70"
+                            className="cursor-pointer bg-blue-500 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-900 text-white p-2 rounded-lg transition-all duration-300 disabled:opacity-70"
                         >
                             {sending ? <Spinner size={14} /> : <FaPaperPlane />}
                         </button>

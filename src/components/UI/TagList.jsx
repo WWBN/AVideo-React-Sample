@@ -11,7 +11,7 @@ export default function TagList({ tags }) {
                 .map((tag, index) => (
                     <Tooltip key={index} content={tag.tooltip || tag.label}>
                         <span
-                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1 rounded-md truncate max-w-[8rem]"
+                            className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2.5 py-1 rounded-full truncate max-w-[8rem]"
                             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(`#${tag.text}`) }}
                         />
                     </Tooltip>

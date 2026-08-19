@@ -123,7 +123,7 @@ export default function PlaylistButton({ videoId }) {
                                         <button
                                             onClick={() => handleToggle(playlist)}
                                             disabled={pendingId === playlist.id}
-                                            className="cursor-pointer w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:cursor-not-allowed text-left"
+                                            className="cursor-pointer w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-700 disabled:cursor-not-allowed text-left"
                                         >
                                             <span
                                                 className={`flex items-center justify-center w-4 h-4 rounded border shrink-0 ${
@@ -145,13 +145,13 @@ export default function PlaylistButton({ videoId }) {
                             value={newName}
                             onChange={(e) => setNewName(e.target.value)}
                             placeholder="New playlist name"
-                            className="min-w-0 flex-1 text-sm px-2 py-1.5 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"
+                            className="min-w-0 flex-1 text-sm px-2 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900"
                         />
                         <button
                             type="submit"
                             disabled={creating || !newName.trim()}
                             aria-label="Create playlist"
-                            className="cursor-pointer shrink-0 flex items-center justify-center w-8 h-8 rounded-md bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="cursor-pointer shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {creating ? <Spinner size={12} /> : <FaPlus size={12} />}
                         </button>

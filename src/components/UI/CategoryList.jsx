@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { getCategories } from "../../config/api";
 import Spinner from "./Spinner";
 import Tooltip from "./Tooltip";
 
 // Shared layoutId lets the active pill's background glide smoothly to whichever pill is selected.
-const ActivePillBackground = () => (
-    <motion.span
-        layoutId="category-pill-active"
-        className="absolute inset-0 rounded-full bg-blue-600"
-        transition={{ type: "spring", stiffness: 400, damping: 32 }}
-    />
-);
+function ActivePillBackground({ prefersReducedMotion }) {
+    return (
+        <motion.span
+            layoutId="category-pill-active"
+            className="absolute inset-0 rounded-full bg-blue-600"
+            transition={prefersReducedMotion ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 32 }}
+        />
+    );
+}
 
 export default function CategoryList({ selectedCategory, onSelectCategory }) {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const prefersReducedMotion = useReducedMotion();
 
     useEffect(() => {
         getCategories()
@@ -48,7 +51,7 @@ export default function CategoryList({ selectedCategory, onSelectCategory }) {
                         onClick={() => onSelectCategory(null)}
                         className={pillClasses(!selectedCategory)}
                     >
-                        {!selectedCategory && <ActivePillBackground />}
+                        {!selectedCategory && <ActivePillBackground prefersReducedMotion={prefersReducedMotion} />}
                         <span className="relative z-10">All</span>
                     </button>
                 </Tooltip>
@@ -59,7 +62,7 @@ export default function CategoryList({ selectedCategory, onSelectCategory }) {
                             onClick={() => onSelectCategory(cat.clean_name)}
                             className={pillClasses(selectedCategory === cat.clean_name)}
                         >
-                            {selectedCategory === cat.clean_name && <ActivePillBackground />}
+                            {selectedCategory === cat.clean_name && <ActivePillBackground prefersReducedMotion={prefersReducedMotion} />}
                             <span className="relative z-10 flex items-center gap-1.5">
                                 {cat.iconClass && <i className={cat.iconClass} aria-hidden="true"></i>}
                                 {cat.name}
