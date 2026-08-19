@@ -10,8 +10,13 @@
 
 **Browsing & Playback**
 - Category-based video browsing with an animated, scrollable pill filter bar
+- Full-text video search (top bar), mutually exclusive with category filtering, with its own empty/error state
 - Netflix-style hero banner spotlighting a featured video
-- Responsive video grid with skeleton loading states and scroll-reveal animations
+- "Continue Watching" shelf, derived from each video's real watch-progress data (logged-in users only)
+- Trending/Popular/Live/Suggested sections render as horizontal scrolling carousels; other sections use a responsive grid
+- Live badge and watch-progress bar overlaid on video cards
+- Responsive video grid with skeleton loading states, scroll-reveal animations, and `prefers-reduced-motion` support
+- Click the logo at any time to return to the home feed, clearing any active search or category filter
 - Custom video player overlay (fullscreen, mini/PiP mode, close button) built around AVideo's embeddable player, with embed parameters tuned to hide AVideo's own branding/info/close UI so it behaves like a native player inside the app
 - Video detail stats: views, duration, tags, category
 
